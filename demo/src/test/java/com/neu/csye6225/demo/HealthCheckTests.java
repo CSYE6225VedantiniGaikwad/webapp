@@ -23,6 +23,8 @@ public class HealthCheckTests {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
         // Assert that the response status code is 200 OK
-        assertEquals(200, responseEntity.getStatusCodeValue());
+
+        assertEquals(204, responseEntity.getStatusCodeValue());
+
     }
 }
