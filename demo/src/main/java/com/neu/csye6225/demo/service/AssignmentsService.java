@@ -3,6 +3,8 @@ package com.neu.csye6225.demo.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.neu.csye6225.demo.auth.BasicAuth;
 import com.neu.csye6225.demo.entities.Assignments;
+import com.neu.csye6225.demo.exceptions.AssignmentNotFoundException;
+import com.neu.csye6225.demo.exceptions.CannotAccessException;
 import com.neu.csye6225.demo.repositories.AssignmentsRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -55,7 +58,15 @@ public class AssignmentsService {
     }
 
     public Assignments getAssignmentsById ( UUID id ) {
-        return assignmentsRepository.findAssignmentsById(id);
+        if (id == null)
+            throw new IllegalArgumentException("Invalid User");
+        Optional<Assignments> optionalUser = Optional.ofNullable(assignmentsRepository.findAssignmentsById(id));
+
+        Assignments assignment = optionalUser.orElseThrow(() -> new AssignmentNotFoundException("Assignment not found"));
+        if (!assignment.getOwnerOfAssignment().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            throw new CannotAccessException("Cannot access requested resource");
+
+        return assignment;
     }
 
     @Transactional
@@ -70,13 +81,23 @@ public class AssignmentsService {
             query.executeUpdate();
             return true;
         }
-        return false;    }
+        throw new CannotAccessException("Cannot access the requested Data");
+    }
 
     public boolean updateAssignmnentsById ( UUID uuid, Assignments requestBody ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assignments assignments = assignmentsRepository.findAssignmentsById(uuid);
-        assignments.setName(requestBody.getName());
-        assignments.setPoints(requestBody.getPoints());
-        assignments.setNumberOfAttempts(requestBody.getNumberOfAttempts());
-        return assignmentsRepository.save(assignments) != null ? true : false;
+        if (assignments == null){
+            throw new AssignmentNotFoundException("Not Found");
+        }
+        if (authentication.getPrincipal().equals(assignments.getOwnerOfAssignment())) {
+            assignments.setName(requestBody.getName());
+            assignments.setPoints(requestBody.getPoints());
+            assignments.setNumberOfAttempts(requestBody.getNumberOfAttempts());
+            return assignmentsRepository.save(assignments) != null ? true : false;
+        }
+        else {
+            throw new CannotAccessException("Cannot access the requested Data");
+        }
     }
 }
