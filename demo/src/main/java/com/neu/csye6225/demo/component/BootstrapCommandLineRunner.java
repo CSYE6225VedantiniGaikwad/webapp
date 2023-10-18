@@ -2,6 +2,7 @@ package com.neu.csye6225.demo.component;
 
 import com.neu.csye6225.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,10 @@ public class BootstrapCommandLineRunner implements CommandLineRunner {
         this.userService = userService;
     }
 
+    @Value("${env.CSV_PATH:./opt/users.csv}")
+    private String csv_path;
     @Override
     public void run(String... args) throws IOException {
-        userService.loadUsersFromCSV("opt/users.csv");
+        userService.loadUsersFromCSV(csv_path);
     }
 }

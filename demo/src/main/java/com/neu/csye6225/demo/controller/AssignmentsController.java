@@ -69,25 +69,20 @@ public class AssignmentsController {
     @PutMapping("/v1/assignments/{id}")
     public ResponseEntity<Object> updateAssignments(@RequestBody String requestBody,
                                                     @PathVariable String id){
-        try {
-            JsonNode jsonNode = validationService.jsonValidation(requestBody, SCHEMA_PATH);
-            UUID uuid = UUID.fromString(id);
-            Assignments assignments = new Assignments();
-            assignments.setName(jsonNode.get("name").textValue());
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-            LocalDateTime date = LocalDateTime.parse(jsonNode.get("deadline").textValue(), dateTimeFormatter);
-            assignments.setDeadline(date);
-            assignments.setPoints(jsonNode.get("points").intValue());
-            assignments.setAssignmentUpdated(LocalDateTime.now());
-            if (!assignmentsService.updateAssignmnentsById(uuid, assignments)){
-                return ResponseEntity.status(404).build();
-            }
-            log.info("Assignment Updated in Database");
-            return ResponseEntity.status(204).build();
+        JsonNode jsonNode = validationService.jsonValidation(requestBody, SCHEMA_PATH);
+        UUID uuid = UUID.fromString(id);
+        Assignments assignments = new Assignments();
+        assignments.setName(jsonNode.get("name").textValue());
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        LocalDateTime date = LocalDateTime.parse(jsonNode.get("deadline").textValue(), dateTimeFormatter);
+        assignments.setDeadline(date);
+        assignments.setPoints(jsonNode.get("points").intValue());
+        assignments.setAssignmentUpdated(LocalDateTime.now());
+        if (!assignmentsService.updateAssignmnentsById(uuid, assignments)){
+            return ResponseEntity.status(404).build();
         }
-        catch (Exception e){
-            log.error(e.getMessage());
-            return ResponseEntity.status(400).build();
-        }
+        log.info("Assignment Updated in Database");
+        return ResponseEntity.status(204).build();
+
     }
 }
