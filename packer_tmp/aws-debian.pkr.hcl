@@ -31,7 +31,8 @@ source "amazon-ebs" "my-ami" {
   region          = "${var.aws_region}"
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
-  profile         = "dev"
+  profile         = "default"
+  main
   instance_type   = "t2.micro"
   source_ami      = "${var.source_ami}"
   ssh_username    = "${var.ssh_username}"
@@ -54,7 +55,7 @@ build {
   }
 
   provisioner "file" {
-    source      = "../demo/opt/users.csv"
+    source      = "../opt/users.csv"
     destination = "/tmp/users.csv"
   }
 
