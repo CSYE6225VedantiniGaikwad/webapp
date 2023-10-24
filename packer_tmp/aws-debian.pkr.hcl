@@ -68,7 +68,7 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo mv /tmp/users.csv /opt/users.csv",
+      "sudo mv /users.csv /opt/users.csv",
       "sudo mv /tmp/demo-0.0.1-SNAPSHOT.jar /opt/demo-0.0.1-SNAPSHOT.jar"
     ]
   }
