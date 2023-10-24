@@ -54,7 +54,7 @@ build {
   }
 
   provisioner "file" {
-    source      = "/users.csv"
+    source      = "../opt/users.csv"
     destination = "/tmp/users.csv"
   }
 
