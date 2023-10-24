@@ -7,7 +7,7 @@ echo "---x---Installing Java 17---x---"
 sudo apt install openjdk-17-jdk -y
 
 #sudo apt install unzip
-export CSV_PATH="/opt/users.csv"
+export CSV_PATH="/users.csv"
 
 echo "---x---Setting Java Environment Variables---x---"
 echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/" >> ~/.bashrc
