@@ -16,7 +16,7 @@ public class BootstrapCommandLineRunner implements CommandLineRunner {
         this.userService = userService;
     }
 
-    @Value("${env.CSV_PATH:./opt/users.csv}")
+    @Value("${env.CSV_PATH:/opt/users.csv}")
     private String csv_path;
     @Override
     public void run(String... args) throws IOException {
