@@ -10,6 +10,10 @@ Database:
 
 Postman:
 
+
+
+
+
 Get Healthz:
 localhost:8080/healthz
 
