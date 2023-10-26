@@ -19,24 +19,6 @@ source ~/.bashrc
 echo "---x---Installing Maven---x---"
 sudo apt install maven -y
 
-echo "---x---Installing PostgreSQL---x---"
-sudo apt install postgresql postgresql-contrib -y
-
-# Start and enable PostgreSQL to start on boot
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
-
-#!/bin/bash
-
-# Create a PostgreSQL database
-
-
-
-# Configure PostgreSQL: set password, create database, and create user
-sudo -u postgres createuser  myuser  # --noninteractive --pwprompt
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'test@123';"
-#sudo -u postgres createdb postgres
-#sudo -U postgres psql -c "ALTER USER myuser WITH SUPERUSER"
 
 
 
