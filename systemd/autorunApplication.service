@@ -1,0 +1,15 @@
+[Unit]
+Description=A spring boot application
+After=cloud-final.service
+
+[Service]
+User=WebappUser
+WorkingDirectory=/opt
+ExecStart=/usr/bin/java -jar /opt/demo-0.0.1-SNAPSHOT.jar --spring.config.location=/opt/
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/demo.log
+StandardError=append:/var/log/demo-error.log
+
+[Install]
+WantedBy=cloud-init.target

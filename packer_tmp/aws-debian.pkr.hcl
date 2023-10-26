@@ -31,11 +31,12 @@ source "amazon-ebs" "my-ami" {
   region          = "${var.aws_region}"
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
-  profile         = "default"
+  profile         = "dev"
   instance_type   = "t2.micro"
   source_ami      = "${var.source_ami}"
   ssh_username    = "${var.ssh_username}"
   subnet_id       = "${var.subnet_id}"
+  ami_users       = ["458264565990"]
 
   launch_block_device_mappings {
     delete_on_termination = true
@@ -58,6 +59,11 @@ build {
     destination = "/tmp/users.csv"
   }
 
+  provisioner "file" {
+    source      = "../systemd/autorunApplication.service"
+    destination = "/tmp/autorunApp.service"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
@@ -69,7 +75,20 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/users.csv /opt/users.csv",
-      "sudo mv /tmp/demo-0.0.1-SNAPSHOT.jar /opt/demo-0.0.1-SNAPSHOT.jar"
+      "sudo mv /tmp/demo-0.0.1-SNAPSHOT.jar /opt/demo-0.0.1-SNAPSHOT.jar",
+      "sudo mv /tmp/autorunApp.service /etc/systemd/system/autorunApp.service"
     ]
   }
+
+  provisioner "shell" {
+    inline = [
+      "sudo useradd WebappUser",
+      "sudo chown WebappUser:WebappUser /opt/demo-0.0.1-SNAPSHOT.jar",
+      "sudo chmod 500 /opt/demo-0.0.1-SNAPSHOT.jar",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable autorunApp",
+      "sudo systemctl start autorunApp"
+    ]
+  }
+
 }
