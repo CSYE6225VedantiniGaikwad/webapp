@@ -7,6 +7,7 @@ import com.neu.csye6225.demo.service.AssignmentsService;
 import com.neu.csye6225.demo.service.ValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,9 @@ public class AssignmentsController {
     private ValidationService validationService;
     private static final String SCHEMA_PATH = "static/schema.json";
 
-    private static final StatsDClient statsd = new NonBlockingStatsDClient("statsdClient", "dev.vedantinigaikwad.me", 8125);
+    @Value("${env.domain:localhost}")
+    private static String domain;
+    private static final StatsDClient statsd = new NonBlockingStatsDClient("statsdClient", domain, 8125);
 
     public AssignmentsController(AssignmentsService assignmentsService, ValidationService validationService) {
         this.assignmentsService = assignmentsService;
