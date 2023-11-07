@@ -91,8 +91,6 @@ build {
       "sudo useradd WebappUser",
       "sudo chown WebappUser:WebappUser /opt/demo-0.0.1-SNAPSHOT.jar",
       "sudo chmod 500 /opt/demo-0.0.1-SNAPSHOT.jar",
-      "sudo wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb",
-      "sudo dpkg -i -E ./amazon-cloudwatch-agent.deb",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable autorunApp",
       "sudo systemctl start autorunApp"
