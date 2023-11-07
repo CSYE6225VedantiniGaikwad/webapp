@@ -31,7 +31,7 @@ source "amazon-ebs" "my-ami" {
   region          = "${var.aws_region}"
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
-  profile         = "dev"
+  profile         = "default"
   instance_type   = "t2.micro"
   source_ami      = "${var.source_ami}"
   ssh_username    = "${var.ssh_username}"
@@ -91,6 +91,8 @@ build {
       "sudo useradd WebappUser",
       "sudo chown WebappUser:WebappUser /opt/demo-0.0.1-SNAPSHOT.jar",
       "sudo chmod 500 /opt/demo-0.0.1-SNAPSHOT.jar",
+      "sudo wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb",
+      "sudo dpkg -i -E ./amazon-cloudwatch-agent.deb",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable autorunApp",
       "sudo systemctl start autorunApp"
