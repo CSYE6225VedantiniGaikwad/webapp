@@ -64,6 +64,11 @@ build {
     destination = "/tmp/autorunApp.service"
   }
 
+  provisioner "file" {
+    source      = "../cloudwatch/cloudwatch.json"
+    destination = "/tmp/cloudwatch.json"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
@@ -76,6 +81,7 @@ build {
     inline = [
       "sudo mv /tmp/users.csv /opt/users.csv",
       "sudo mv /tmp/demo-0.0.1-SNAPSHOT.jar /opt/demo-0.0.1-SNAPSHOT.jar",
+      "sudo mv /tmp/cloudwatch.json /opt/cloudwatch.json",
       "sudo mv /tmp/autorunApp.service /etc/systemd/system/autorunApp.service"
     ]
   }
