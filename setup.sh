@@ -19,6 +19,11 @@ source ~/.bashrc
 echo "---x---Installing Maven---x---"
 sudo apt install maven -y
 
+echo "---x---Downloading Cloudwatch agent---x---"
+sudo wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+echo "---x---Installing Cloudwatch agent---x---"
+sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+
 
 
 
