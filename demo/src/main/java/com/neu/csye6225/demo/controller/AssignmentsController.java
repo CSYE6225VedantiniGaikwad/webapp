@@ -2,6 +2,7 @@ package com.neu.csye6225.demo.controller;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.neu.csye6225.demo.config.StatsDConfig;
 import com.neu.csye6225.demo.entities.Assignments;
 import com.neu.csye6225.demo.service.AssignmentsService;
 import com.neu.csye6225.demo.service.ValidationService;
@@ -30,8 +31,8 @@ public class AssignmentsController {
     private ValidationService validationService;
     private static final String SCHEMA_PATH = "static/schema.json";
 
-    @Value("${env.domain:localhost}")
-    String domain;
+    @Autowired
+    StatsDClient statsDClient;
 
     public AssignmentsController(AssignmentsService assignmentsService, ValidationService validationService) {
         this.assignmentsService = assignmentsService;
@@ -45,8 +46,7 @@ public class AssignmentsController {
         }
         List<Assignments> assignmentsList = assignmentsService.getAllAssignments();
 
-        StatsDClient statsd = new NonBlockingStatsDClient("statsdClient", domain, 8125);
-        statsd.incrementCounter("api.assignments.getAll");
+        statsDClient.increment("api.assignments.getAll");
         return ResponseEntity.ok(assignmentsList);
     }
 
