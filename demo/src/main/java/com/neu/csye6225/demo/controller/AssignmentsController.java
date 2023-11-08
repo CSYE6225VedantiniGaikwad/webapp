@@ -54,11 +54,11 @@ public class AssignmentsController {
         try {
             JsonNode jsonNodeRequest = validationService.jsonValidation(s, SCHEMA_PATH);
             assignmentsService.creatAssignments(jsonNodeRequest);
-            //statsd.incrementCounter("api.assignments.create");
+            statsDClient.increment("api.assignments.create");
             return ResponseEntity.status(201).build();
         } catch (Exception e) {
             log.error(e.getMessage());
-            //statsd.incrementCounter("api.assignments.create.failed");
+            statsDClient.increment("api.assignments.create.failed");
             return ResponseEntity.status(400).build();
         }
     }
@@ -67,14 +67,14 @@ public class AssignmentsController {
     public ResponseEntity<Object> getAssignmentById ( @PathVariable String id ) {
         UUID uuid = UUID.fromString(id);
         Assignments assignments = assignmentsService.getAssignmentsById(uuid);
-        //statsd.incrementCounter("api.assignments.getById");
+        statsDClient.incrementCounter("api.assignments.getById");
         return ResponseEntity.status(200).body(assignments);
     }
 
     @DeleteMapping("/v1/assignments/{id}")
     public ResponseEntity<Object> deleteAssignmentById ( @PathVariable String id ) {
         UUID uuid = UUID.fromString(id);
-        //statsd.incrementCounter("api.assignments.delete");
+        statsDClient.increment("api.assignments.delete");
         return assignmentsService.deleteAssignmentsById(uuid)?
                 ResponseEntity.status(204).build() : ResponseEntity.status(404).build();
     }
@@ -92,11 +92,11 @@ public class AssignmentsController {
         assignments.setPoints(jsonNode.get("points").intValue());
         assignments.setAssignmentUpdated(LocalDateTime.now());
         if (!assignmentsService.updateAssignmnentsById(uuid, assignments)){
-            //statsd.incrementCounter("api.assignments.update.failed");
+            statsDClient.incrementCounter("api.assignments.update.failed");
             return ResponseEntity.status(404).build();
         }
         log.info("Assignment Updated in Database");
-        //statsd.incrementCounter("api.assignments.update");
+        statsDClient.incrementCounter("api.assignments.update");
         return ResponseEntity.status(204).build();
 
     }
