@@ -30,8 +30,8 @@ public class AssignmentsController {
     private ValidationService validationService;
     private static final String SCHEMA_PATH = "static/schema.json";
 
-    @Value("${env.domain:localhost}")
-    String domain;
+    @Autowired
+    StatsDClient statsDClient;
 
     public AssignmentsController(AssignmentsService assignmentsService, ValidationService validationService) {
         this.assignmentsService = assignmentsService;
@@ -45,8 +45,7 @@ public class AssignmentsController {
         }
         List<Assignments> assignmentsList = assignmentsService.getAllAssignments();
 
-        StatsDClient statsd = new NonBlockingStatsDClient("statsdClient", domain, 8125);
-        statsd.incrementCounter("api.assignments.getAll");
+        statsDClient.increment("api.assignments.getAll");
         return ResponseEntity.ok(assignmentsList);
     }
 
