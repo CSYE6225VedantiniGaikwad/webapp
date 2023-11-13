@@ -9,11 +9,6 @@ Database:
 1. Run brew services start to start mysql.
 
 Postman:
-
-
-
-
-
 Get Healthz:
 localhost:8080/healthz
 
