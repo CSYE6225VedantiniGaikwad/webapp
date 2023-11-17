@@ -5,6 +5,7 @@ import com.timgroup.statsd.StatsDClient;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,9 @@ public class HealthCheck {
     private final HealthCheckService healthCheckService;
     @Autowired
     private final HikariDataSource hikariDataSource;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     StatsDClient statsDClient;
@@ -26,12 +30,9 @@ public class HealthCheck {
     @GetMapping("healthz")
     public ResponseEntity<String> getHealthCheck() {
         try {
-            if (healthCheckService.dbConnectionCheck()) {
-                statsDClient.increment("api.healthCheck.ok");
-                return ResponseEntity.ok().build();
-            }
-            statsDClient.increment("api.healthCheck.failed");
-            return ResponseEntity.status(503).build();
+            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            statsDClient.increment("api.healthCheck.ok");
+            return ResponseEntity.ok().build();
         } catch (Exception exception) {
             statsDClient.increment("api.healthCheck.failed");
             return ResponseEntity.status(503).build();
