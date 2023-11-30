@@ -1,6 +1,7 @@
 package com.neu.csye6225.demo.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.neu.csye6225.demo.auth.BasicAuth;
 import com.neu.csye6225.demo.entities.Assignments;
 import com.neu.csye6225.demo.exceptions.AssignmentNotFoundException;
@@ -17,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AssignmentsService {
@@ -29,6 +27,8 @@ public class AssignmentsService {
     private final AssignmentsRepository assignmentsRepository;
     @Autowired
     private final BasicAuth basicAuth;
+    @Autowired
+    private SubmissionService submissionService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -54,6 +54,7 @@ public class AssignmentsService {
         assignments.setAssignmentUpdated(LocalDateTime.now());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         assignments.setOwnerOfAssignment(authentication.getName());
+        assignments.setNumberOfSubmits(0);
         assignmentsRepository.save(assignments);
     }
 
@@ -79,6 +80,7 @@ public class AssignmentsService {
             Query query = entityManager.createQuery("delete from Assignments a WHERE a.id=:id");
             query.setParameter("id", id);
             query.executeUpdate();
+            submissionService.deleteSubmissionByAssignmentId(id);
             return true;
         }
         throw new CannotAccessException("Cannot access the requested Data");

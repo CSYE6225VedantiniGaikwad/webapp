@@ -23,4 +23,5 @@ public class Assignments {
     private LocalDateTime assignmentCreated;
     private LocalDateTime assignmentUpdated;
     private String ownerOfAssignment;
+    private int numberOfSubmits;
 }
