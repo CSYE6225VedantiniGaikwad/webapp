@@ -25,7 +25,7 @@ public class SubmissionController {
     private SubmissionService submissionService;
     private static final String SUBMISSION_SCHEMA_PATH = "static/submissionSchema.json";
 
-    @PostMapping("/v2/assignments/{id}/submission")
+    @PostMapping("/v1/assignments/{id}/submission")
     public ResponseEntity<Object> submitAssignments(@RequestBody String requestBody, @PathVariable(value = "id") String id, HttpServletRequest request){
         UUID uuid = UUID.fromString(id);
         JsonNode jsonNode = validationService.jsonValidation(requestBody, SUBMISSION_SCHEMA_PATH);
