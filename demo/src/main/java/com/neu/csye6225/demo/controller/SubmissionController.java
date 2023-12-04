@@ -35,9 +35,13 @@ public class SubmissionController {
         submission.setSubmissionUrl(jsonNode.get("submissionUrl").textValue());
         submission.setSubmissionDate(LocalDateTime.now());
         submission.setSubmissionUpdated(LocalDateTime.now());
-        Submission submittedAssignment = submissionService.submitAssignmentById(uuid, submission, length);
-        if (submittedAssignment != null) {
-            return ResponseEntity.status(201).body(submittedAssignment);
+        try {
+            Submission submittedAssignment = submissionService.submitAssignmentById(uuid, submission, length);
+            if (submittedAssignment != null) {
+                return ResponseEntity.status(201).body(submittedAssignment);
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(404).build();
         }
         return ResponseEntity.status(400).build();
     }
