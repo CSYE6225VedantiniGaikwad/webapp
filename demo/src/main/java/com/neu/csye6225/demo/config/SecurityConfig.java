@@ -19,7 +19,7 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("healthz", "/healthz").permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/v1/assignments/*", "/v1/assignments", "/v1/assignments/*/submission","/v2/assignments/*/submission", "/demo/assignments", "/demo/assignments/*").authenticated())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/v1/assignments/*", "/v1/assignments", "/v1/assignments/*/submission","/demo/assignments/*/submission", "/demo/assignments", "/demo/assignments/*").authenticated())
                 .httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
     }
