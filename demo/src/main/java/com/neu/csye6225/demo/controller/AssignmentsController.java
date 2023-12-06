@@ -38,7 +38,7 @@ public class AssignmentsController {
         this.validationService = validationService;
     }
 
-    @GetMapping("/v1/assignments")
+    @GetMapping("/demo/assignments")
     public ResponseEntity<Object> getAllAssignments(@RequestBody(required = false) String requestString, @RequestParam(required = false) String requestParm) {
         if (requestString != null || requestParm != null) {
             return ResponseEntity.status(400).build();
@@ -49,7 +49,7 @@ public class AssignmentsController {
         return ResponseEntity.ok(assignmentsList);
     }
 
-    @PostMapping("/v1/assignments")
+    @PostMapping("/demo/assignments")
     public ResponseEntity<String> createAssignments (@RequestBody String s){
         try {
             JsonNode jsonNodeRequest = validationService.jsonValidation(s, SCHEMA_PATH);
